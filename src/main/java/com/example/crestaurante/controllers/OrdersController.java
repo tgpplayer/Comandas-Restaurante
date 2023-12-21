@@ -27,22 +27,22 @@ public class OrdersController {
 	
 	@MessageMapping("/pedido/{roomId}")
 	@SendTo("/topic/{roomId}")
-	public ResponseEntity<List<String>> order(@DestinationVariable String roomId, RequestDTO pedido, List<ProductDTO> productos) {
+	public ResponseEntity<List<String>> order(@DestinationVariable String roomId, RequestDTO request, List<ProductDTO> products) {
 		
 		List<String> dishes = new ArrayList<String>();
 		
-		for(ProductDTO producto: productos) {
+		for(ProductDTO product: products) {
 			
 			// We create orders for the later total payment of a table
 			OrderDTO order = new OrderDTO();
-			order.setRequest(pedido);
-			order.setProduct(producto);
+			order.setRequest(request);
+			order.setProduct(product);
 			
 			oService.saveOrder(order);
 			
 			// We strictly select food to be sent to the kitchen, not drinks
-			if(producto.getCategory() == "dish") {
-				dishes.add(producto.getProduct());
+			if(product.getCategory() == "dish") {
+				dishes.add(product.getProduct());
 			}
 		}
 		
@@ -62,6 +62,33 @@ public class OrdersController {
 			}
 		}
 		
+		// We set finished table to 'true' to not continue showing the table and its orders
+		// at the Android screen
+		for(OrderDTO order: totalOrders) {
+			if(order.getRequest().getTable() == table) {
+				order.getRequest().setFinished(true);
+				break;
+			}
+		}
 		return ResponseEntity.status(HttpStatus.OK).body(specificTableOrders);
 	}
+	
+	// TODO: Show all tables and its orders if they are not finished
+	@GetMapping("/get-unfinished-tables")
+	public ResponseEntity<List<HashMap<Integer, ProductDTO>>> getUnfinishedTables() {
+		List<OrderDTO> orders = oService.getAllOrders();
+		// TODO: en la siguiente lista, poner una lista de ProductDTO en vez de solo uno para
+		// abarcar todos los productos y no solo uno
+		List<HashMap<Integer, ProductDTO>> unfinishedTables = new ArrayList<HashMap<Integer, ProductDTO>>();
+		HashMap<Integer, ProductDTO> unfinishedTable = new HashMap<Integer, ProductDTO>();
+		
+		for(OrderDTO order: orders) {
+			if(order.getRequest().isFinished() == false) {
+				unfinishedTable.put(order.getRequest().getTable(), order.getProduct());
+				
+			}
+		}
+		return null;
+	}
+
 }

@@ -21,4 +21,5 @@ public class RequestEntity {
 	private int table;
 	@ManyToOne
 	private WaiterEntity waiter;
+	private boolean finished;
 }

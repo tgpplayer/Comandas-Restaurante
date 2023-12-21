@@ -8,4 +8,5 @@ public class RequestDTO {
 	private long id;
 	private int table;
 	private WaiterDTO waiter;
+	private boolean finished;
 }
