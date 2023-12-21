@@ -25,6 +25,8 @@ public class OrdersController {
 	@Autowired
 	private OrderService oService;
 	
+	// TODO: Once the bill is payed, delete the customer's order? Waiters Tables? Top ranked dishes?
+	
 	@MessageMapping("/pedido/{roomId}")
 	@SendTo("/topic/{roomId}")
 	public ResponseEntity<List<String>> order(@DestinationVariable String roomId, RequestDTO request, List<ProductDTO> products) {
@@ -64,31 +66,41 @@ public class OrdersController {
 		
 		// We set finished table to 'true' to not continue showing the table and its orders
 		// at the Android screen
-		for(OrderDTO order: totalOrders) {
-			if(order.getRequest().getTable() == table) {
-				order.getRequest().setFinished(true);
-				break;
-			}
-		}
+//		for(OrderDTO order: totalOrders) {
+//			if(order.getRequest().getTable() == table) {
+//				order.getRequest().setFinished(true);
+//				break;
+//			}
+//		}
 		return ResponseEntity.status(HttpStatus.OK).body(specificTableOrders);
 	}
 	
-	// TODO: Show all tables and its orders if they are not finished
+	// TODO: Show the tables that are not finished
 	@GetMapping("/get-unfinished-tables")
-	public ResponseEntity<List<HashMap<Integer, ProductDTO>>> getUnfinishedTables() {
-		List<OrderDTO> orders = oService.getAllOrders();
-		// TODO: en la siguiente lista, poner una lista de ProductDTO en vez de solo uno para
-		// abarcar todos los productos y no solo uno
-		List<HashMap<Integer, ProductDTO>> unfinishedTables = new ArrayList<HashMap<Integer, ProductDTO>>();
-		HashMap<Integer, ProductDTO> unfinishedTable = new HashMap<Integer, ProductDTO>();
+	public ResponseEntity<List<Integer>> getUnfinishedTables() {
+		List<Integer> tables = new ArrayList<Integer>();
 		
-		for(OrderDTO order: orders) {
+		// This 'for' is an algorithm which identifies the tables that are not finished yet
+		for(OrderDTO order: oService.getAllOrders()) {
+			boolean alreadyIn = false;
+			
 			if(order.getRequest().isFinished() == false) {
-				unfinishedTable.put(order.getRequest().getTable(), order.getProduct());
-				
+				if(tables.size() > 1) {
+					for(Integer i: tables) {
+						if(order.getRequest().getTable() == i) {
+							alreadyIn = true;
+							break;
+						}
+					}
+					if(alreadyIn == false) {
+						tables.add(order.getRequest().getTable());
+					}
+				} else {
+					tables.add(order.getRequest().getTable());
+				}
 			}
 		}
-		return null;
+		return ResponseEntity.status(HttpStatus.OK).body(tables);
 	}
 
 }
