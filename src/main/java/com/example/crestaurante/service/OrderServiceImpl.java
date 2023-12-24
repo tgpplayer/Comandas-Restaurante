@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.crestaurante.dto.BillDTO;
 import com.example.crestaurante.dto.OrderDTO;
 import com.example.crestaurante.mappers.OrderMapper;
 import com.example.crestaurante.repositories.OrderRepository;
@@ -22,10 +23,15 @@ public class OrderServiceImpl implements OrderService{
 	public void saveOrder(OrderDTO order) {
 		oRepo.save(oMapper.toEntity(order));
 	}
+	
+	@Override
+	public void addProductsToTable(long requestId, long productId) {
+		oRepo.addProductsToTable(requestId, productId);
+	}
 
 	@Override
-	public List<OrderDTO> getAllOrders() {
-		return oMapper.toDTOList(oRepo.findAll());
+	public List<BillDTO> getAllOrdersFromTable(int table) {
+		return oRepo.getAllOrdersFromTable(table);
 	}
 
 }

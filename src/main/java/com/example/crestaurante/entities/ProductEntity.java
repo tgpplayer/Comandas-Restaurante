@@ -17,5 +17,5 @@ public class ProductEntity {
 	private long id;
 	private String product;
 	private String category;
-	private Double price;
+	private double price;
 }

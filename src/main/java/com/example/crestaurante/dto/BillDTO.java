@@ -3,10 +3,7 @@ package com.example.crestaurante.dto;
 import lombok.Data;
 
 @Data
-public class ProductDTO {
-	
-	private long id;
+public class BillDTO {
 	private String product;
-	private String category;
 	private double price;
 }

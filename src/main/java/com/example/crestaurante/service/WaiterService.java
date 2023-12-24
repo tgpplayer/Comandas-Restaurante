@@ -1,5 +1,7 @@
 package com.example.crestaurante.service;
 
+import com.example.crestaurante.dto.WaiterDTO;
+
 public interface WaiterService {
-	String identifyWaiter(int code);
+	WaiterDTO identifyWaiter(int code);
 }

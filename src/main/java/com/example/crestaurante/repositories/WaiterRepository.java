@@ -8,6 +8,6 @@ import com.example.crestaurante.entities.WaiterEntity;
 
 public interface WaiterRepository extends JpaRepository<WaiterEntity, Long> {
 	
-	@Query(value = "SELECT fullName FROM waiters WHERE code = :code", nativeQuery = true)
-	public String getWaiterNameByCode(@Param("code") int code);
+	@Query(value = "SELECT * FROM waiters WHERE code = :code", nativeQuery = true)
+	public WaiterEntity getWaiterByCode(@Param("code") int code);
 }

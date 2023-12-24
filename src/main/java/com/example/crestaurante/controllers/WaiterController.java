@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.crestaurante.dto.WaiterDTO;
 import com.example.crestaurante.service.WaiterService;
 
 @RestController
@@ -15,14 +16,14 @@ public class WaiterController {
 	@Autowired
 	private WaiterService wService;
 
+	// We return the whole Waiter object because is needed for later orders
 	@PostMapping("/auth-waiter")
-	public ResponseEntity<String> authWaiter(@PathVariable int code) {
-		String waiterName = wService.identifyWaiter(code);
+	public ResponseEntity<WaiterDTO> authWaiter(@PathVariable int code) {
+		WaiterDTO waiter = wService.identifyWaiter(code);
 		
-		if(waiterName != null) {
-			return ResponseEntity.status(HttpStatus.OK).body(waiterName);
+		if(waiter != null) {
+			return ResponseEntity.status(HttpStatus.OK).body(waiter);
 		}
-		
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(waiterName);
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(waiter);
 	}
 }
