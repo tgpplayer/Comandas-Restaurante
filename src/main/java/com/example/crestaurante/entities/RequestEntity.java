@@ -16,7 +16,7 @@ public class RequestEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	private int table;
+	private int tableNumber;
 	@ManyToOne
 	private WaiterEntity waiter;
 	private boolean finished;

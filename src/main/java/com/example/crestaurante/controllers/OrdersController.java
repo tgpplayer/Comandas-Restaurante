@@ -17,6 +17,7 @@ import com.example.crestaurante.dto.BillDTO;
 import com.example.crestaurante.dto.OrderDTO;
 import com.example.crestaurante.dto.ProductDTO;
 import com.example.crestaurante.dto.RequestDTO;
+import com.example.crestaurante.dto.TopRankedProductDTO;
 import com.example.crestaurante.service.OrderService;
 import com.example.crestaurante.service.RequestService;
 
@@ -29,14 +30,15 @@ public class OrdersController {
 	@Autowired
 	private RequestService rService;
 	
-	// TODO: Once the bill is payed, store the orders 2 days. Waiters Tables? Top ranked dishes?
-	// Redirect drinks to the bar man via ticket
+	// TODO: How much do we store the old orders?
+	// TODO: Redirect drinks to the bar man via ticket.
+	// TODO: Waiters Tables?
 	@MessageMapping("/pedido/{roomId}")
 	@SendTo("/topic/{roomId}")
 	public List<String> order(@DestinationVariable String roomId, RequestDTO request, List<ProductDTO> products) {
 		
 		List<String> dishes = new ArrayList<String>();
-		RequestDTO possibleExistingRequest = rService.getRequest(request.getTable());
+		RequestDTO possibleExistingRequest = rService.getRequest(request.getTableNumber());
 		
 		// This 'for' creates a new order with a new request in case the table is free,
 		// otherwise it will add the new products ordered to the table's bill that is still
@@ -68,8 +70,13 @@ public class OrdersController {
 	@GetMapping("/get-bill")
 	public ResponseEntity<List<BillDTO>> getBillFromTable(@RequestParam int table) {
 		List<BillDTO> specificTableOrders = oService.getAllOrdersFromTable(table);
-		
 		return ResponseEntity.status(HttpStatus.OK).body(specificTableOrders);
+	}
+	
+	// Returns the entire information about the products ordered plus the times ordered for BI
+	@GetMapping("/get-top-ranked-products")
+	public ResponseEntity<List<TopRankedProductDTO>> getTopRankedProducts() {
+		return ResponseEntity.status(HttpStatus.OK).body(oService.getTopRankedProducts());
 	}
 
 }

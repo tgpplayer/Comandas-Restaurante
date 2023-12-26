@@ -6,7 +6,7 @@ import lombok.Data;
 public class RequestDTO {
 	
 	private long id;
-	private int table;
+	private int tableNumber;
 	private WaiterDTO waiter;
 	private boolean finished;
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.crestaurante.dto.BillDTO;
 import com.example.crestaurante.dto.OrderDTO;
+import com.example.crestaurante.dto.TopRankedProductDTO;
 import com.example.crestaurante.mappers.OrderMapper;
 import com.example.crestaurante.repositories.OrderRepository;
 
@@ -32,6 +33,11 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	public List<BillDTO> getAllOrdersFromTable(int table) {
 		return oRepo.getAllOrdersFromTable(table);
+	}
+
+	@Override
+	public List<TopRankedProductDTO> getTopRankedProducts() {
+		return oRepo.getTopRankedProducts();
 	}
 
 }
