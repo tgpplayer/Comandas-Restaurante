@@ -23,7 +23,6 @@ public class RequestController {
 		rService.setTableToFinished(table);
 	}
 
-	// TODO: Show the tables that are not finished
 	@GetMapping("/get-unfinished-tables")
 	public ResponseEntity<List<Integer>> getUnfinishedTables() {
 		return ResponseEntity.status(HttpStatus.OK).body(rService.getUnfinishedTables());

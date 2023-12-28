@@ -1,5 +1,7 @@
 package com.example.crestaurante.entities;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,5 +21,6 @@ public class RequestEntity {
 	private int tableNumber;
 	@ManyToOne
 	private WaiterEntity waiter;
+	private LocalDate orderDate;
 	private boolean finished;
 }
